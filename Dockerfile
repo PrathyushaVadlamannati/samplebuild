@@ -1,20 +1,21 @@
-FROM node:carbon
+# INSTALL JDK 1.8.0_131
 
+FROM windowsservercore
 
-# Create app directory
-WORKDIR /usr/src/app
+RUN -it amazon/aws-cli
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+RUN -it amazon/aws-cli --version
 
-RUN npm install
-# If you are building your code for production
-# RUN npm install --only=production
+RUN  md  /Java_Development_Kit_64bit_v8_Update_231
 
-# Bundle app source
-COPY . .
+RUN cd /Java_Development_Kit_64bit_v8_Update_231
 
-EXPOSE 8080
-CMD [ "npm", "start" ]
+RUN -it -v ~/.aws:/root/.aws -v %cd%:/aws amazon/aws-cli s3 cp s3://jdk-64bit-v8-update-231/jdk_64bit_v8_Update_231/Java_Development_Kit_64bit_v8_Update_231.exe .
+    	
+RUN /Java_Development_Kit_64bit_v8_Update_231.exe /s ADDLOCAL="ToolsFeature,SourceFeature"
+
+ENV JAVA_HOME="C:\Program Files\Java\Java_Development_Kit_64bit_v8_Update_231"
+
+ENV PATH=$PATH:${JAVA_HOME}\bin
+
+ENV CLASSPATH=$CLASSPATH:${JAVA_HOME}\lib
